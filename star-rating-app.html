@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Звездный рейтинг</title>
+	<script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>
+	<style>
+		.star-rating {
+			font-family: Arial, sans-serif;
+			text-align: center;
+			margin-top: 20px;
+		}
+
+		.stars {
+			font-size: 36px;
+			color: #ccc;
+		}
+
+		.star {
+			cursor: pointer;
+			transition: color 0.2s ease;
+		}
+
+		.star.active {
+			color: #ff9800;
+		}
+
+		h2 {
+			font-size: 24px;
+			margin-bottom: 10px;
+		}
+
+		p {
+			font-size: 18px;
+			color: #333;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="app">
+		<div class="star-rating">
+			<h2>Звездный рейтинг</h2>
+			<div class="stars">
+				<span v-for="(star, index) in totalStars" :key="index" :class="['star', { active: index < rating }]"
+					@click="setRating(index + 1)">
+					★
+				</span>
+			</div>
+			<p>Рейтинг: {{ rating }} из {{ totalStars }}</p>
+		</div>
+	</div>
+
+	<script>
+		const app = Vue.createApp({
+			data() {
+				return {
+					rating: 0,
+					totalStars: 5,
+				}
+			},
+			methods: {
+				setRating(newRating) {
+					this.rating = newRating
+				},
+			},
+		})
+
+		app.mount('#app');
+	</script>
+</body>
+
+</html>

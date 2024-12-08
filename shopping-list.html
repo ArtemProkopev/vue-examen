@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Список покупок</title>
+	<script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>
+	<style>
+		.shopping-list {
+			font-family: Arial, sans-serif;
+			padding: 20px;
+			max-width: 400px;
+			margin: 0 auto;
+		}
+
+		h1 {
+			font-size: 24px;
+			margin-bottom: 20px;
+		}
+
+		.input-container {
+			display: flex;
+			justify-content: space-between;
+			margin-bottom: 20px;
+		}
+
+		input {
+			padding: 8px;
+			font-size: 16px;
+			width: 70%;
+			border: 1px solid #ddd;
+			border-radius: 4px;
+		}
+
+		button {
+			padding: 8px 15px;
+			background-color: #333;
+			color: white;
+			border: none;
+			cursor: pointer;
+			border-radius: 4px;
+			font-size: 14px;
+		}
+
+		button:hover {
+			background-color: #555;
+		}
+
+		ul {
+			list-style: none;
+			padding: 0;
+		}
+
+		.shopping-item {
+			background-color: #f9f9f9;
+			padding: 12px;
+			margin-bottom: 12px;
+			border-radius: 4px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+		.edit-input {
+			padding: 5px;
+			font-size: 16px;
+			width: 70%;
+			border-radius: 4px;
+			border: 1px solid #ddd;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="app">
+		<div class="shopping-list">
+			<h1>Список покупок</h1>
+
+			<!-- Поле для добавления нового товара -->
+			<div class="input-container">
+				<input v-model="newItem" @keyup.enter="addItem" placeholder="Добавьте новый товар" />
+				<button @click="addItem">Добавить</button>
+			</div>
+
+			<!-- Список товаров -->
+			<ul>
+				<li v-for="(item, index) in shoppingList" :key="index" class="shopping-item">
+					<!-- Название товара -->
+					<span v-if="!item.isEditing">{{ item.name }}</span>
+					<input v-if="item.isEditing" v-model="item.name" class="edit-input" />
+
+					<!-- Кнопки для редактирования и удаления -->
+					<button v-if="!item.isEditing" @click="editItem(index)">
+						Редактировать
+					</button>
+					<button v-if="item.isEditing" @click="saveItem(index)">
+						Сохранить
+					</button>
+					<button @click="removeItem(index)">Удалить</button>
+				</li>
+			</ul>
+		</div>
+	</div>
+
+	<script>
+		const app = Vue.createApp({
+			data() {
+				return {
+					newItem: '',
+					shoppingList: [
+						{ name: 'Молоко', isEditing: false },
+						{ name: 'Хлеб', isEditing: false },
+						{ name: 'Яйца', isEditing: false },
+					],
+				}
+			},
+			methods: {
+				addItem() {
+					if (this.newItem.trim() === '') return
+					this.shoppingList.push({ name: this.newItem, isEditing: false })
+					this.newItem = ''
+				},
+				editItem(index) {
+					this.shoppingList[index].isEditing = true
+				},
+				saveItem(index) {
+					this.shoppingList[index].isEditing = false
+				},
+				removeItem(index) {
+					this.shoppingList.splice(index, 1)
+				},
+			},
+		})
+
+		app.mount('#app');
+	</script>
+</body>
+
+</html>

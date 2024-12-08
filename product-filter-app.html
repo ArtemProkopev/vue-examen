@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Фильтрация продуктов</title>
+	<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.min.js"></script>
+	<style>
+		.product-filter-app {
+			font-family: Arial, sans-serif;
+			max-width: 800px;
+			margin: 0 auto;
+			text-align: center;
+		}
+
+		.filters {
+			margin-bottom: 20px;
+		}
+
+		.filters input {
+			padding: 10px;
+			margin: 5px;
+			width: 150px;
+			border-radius: 4px;
+			border: 1px solid #ccc;
+		}
+
+		.filters label {
+			font-size: 14px;
+		}
+
+		.product-list {
+			margin-top: 20px;
+		}
+
+		.product {
+			background-color: #f9f9f9;
+			padding: 15px;
+			margin-bottom: 15px;
+			border-radius: 8px;
+			box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+		}
+
+		.product h3 {
+			font-size: 18px;
+			margin: 0;
+		}
+
+		.product p {
+			font-size: 14px;
+		}
+
+		.product p:first-child {
+			font-weight: bold;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="app">
+		<div class="product-filter-app">
+			<h1>Фильтрация продуктов</h1>
+
+			<div class="filters">
+				<input v-model="filters.name" type="text" placeholder="Поиск по названию" />
+				<input v-model="filters.minPrice" type="number" placeholder="Мин. цена" />
+				<input v-model="filters.maxPrice" type="number" placeholder="Макс. цена" />
+				<input v-model="filters.category" type="text" placeholder="Поиск по категории" />
+				<label>
+					<input v-model="filters.inStock" type="checkbox" />
+					В наличии
+				</label>
+			</div>
+
+			<div class="product-list">
+				<div v-for="(product, index) in filteredProducts" :key="index" class="product">
+					<h3>{{ product.name }}</h3>
+					<p>Цена: ${{ product.price }}</p>
+					<p>Категория: {{ product.category }}</p>
+					<p v-if="product.inStock">В наличии</p>
+					<p v-else>Нет в наличии</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		new Vue({
+			el: '#app',
+			data() {
+				return {
+					products: [
+						{ name: 'Товар 1', price: 100, category: 'Электроника', inStock: true },
+						{ name: 'Товар 2', price: 150, category: 'Одежда', inStock: false },
+						{ name: 'Товар 3', price: 200, category: 'Электроника', inStock: true },
+						{ name: 'Товар 4', price: 50, category: 'Продукты', inStock: true },
+						{ name: 'Товар 5', price: 120, category: 'Одежда', inStock: false },
+					],
+					filters: {
+						name: '',
+						minPrice: null,
+						maxPrice: null,
+						category: '',
+						inStock: false,
+					},
+				}
+			},
+			computed: {
+				filteredProducts() {
+					return this.products.filter(product => {
+						const nameMatch = product.name
+							.toLowerCase()
+							.includes(this.filters.name.toLowerCase())
+						const categoryMatch = product.category
+							.toLowerCase()
+							.includes(this.filters.category.toLowerCase())
+						const priceMatch =
+							(!this.filters.minPrice || product.price >= this.filters.minPrice) &&
+							(!this.filters.maxPrice || product.price <= this.filters.maxPrice)
+						const stockMatch = !this.filters.inStock || product.inStock
+
+						return nameMatch && categoryMatch && priceMatch && stockMatch
+					})
+				},
+			},
+		});
+	</script>
+</body>
+
+</html>

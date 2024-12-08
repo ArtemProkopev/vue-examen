@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Простой тест</title>
+	<script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>
+	<style>
+		.quiz {
+			font-family: Arial, sans-serif;
+			text-align: center;
+			margin-top: 50px;
+			padding: 20px;
+		}
+
+		.question {
+			margin-bottom: 15px;
+		}
+
+		button {
+			background-color: #333;
+			color: white;
+			border: none;
+			padding: 10px 20px;
+			font-size: 16px;
+			cursor: pointer;
+			border-radius: 4px;
+			margin-top: 20px;
+		}
+
+		button:hover {
+			background-color: #444;
+		}
+
+		.result {
+			margin-top: 20px;
+			font-size: 18px;
+			font-weight: bold;
+		}
+
+		input[type="radio"],
+		input[type="checkbox"] {
+			margin-right: 10px;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="app">
+		<div class="quiz">
+			<h1>Простой тест</h1>
+			<form @submit.prevent="submitQuiz">
+				<div v-for="(question, index) in questions" :key="index" class="question">
+					<p>{{ question.text }}</p>
+					<div v-for="(option, i) in question.options" :key="i">
+						<label>
+							<input type="radio" v-if="question.type === 'single'" :name="'question' + index" :value="option"
+								v-model="answers[index]" />
+							<input type="checkbox" v-if="question.type === 'multiple'" :name="'question' + index" :value="option"
+								v-model="answers[index]" />
+							{{ option }}
+						</label>
+					</div>
+				</div>
+				<button type="submit">Проверить ответы</button>
+			</form>
+
+			<div v-if="isSubmitted" class="result">
+				<p>Ваш результат: {{ correctAnswersCount }} из {{ questions.length }}</p>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		const app = Vue.createApp({
+			data() {
+				return {
+					questions: [
+						{
+							text: 'Какой язык программирования используется для разработки веб-приложений на Vue?',
+							options: ['JavaScript', 'Java', 'Python'],
+							correctAnswers: ['JavaScript'],
+							type: 'single',
+						},
+						{
+							text: 'Какие из следующих фреймворков используются для создания веб-приложений?',
+							options: ['Vue', 'Django', 'React', 'Spring'],
+							correctAnswers: ['Vue', 'React'],
+							type: 'multiple',
+						},
+						{
+							text: 'Какой тег используется для подключения внешнего скрипта в HTML?',
+							options: ['<script>', '<link>', '<style>'],
+							correctAnswers: ['<script>'],
+							type: 'single',
+						},
+					],
+					answers: [],
+					isSubmitted: false,
+				}
+			},
+			computed: {
+				correctAnswersCount() {
+					return this.questions.reduce((count, question, index) => {
+						const userAnswer = this.answers[index]
+						if (Array.isArray(userAnswer)) {
+							return (
+								count +
+								(userAnswer.sort().toString() === question.correctAnswers.sort().toString()
+									? 1
+									: 0)
+							)
+						}
+						return count + (userAnswer === question.correctAnswers[0] ? 1 : 0)
+					}, 0)
+				},
+			},
+			methods: {
+				submitQuiz() {
+					this.isSubmitted = true
+				},
+			},
+		})
+
+		app.mount('#app');
+	</script>
+</body>
+
+</html>

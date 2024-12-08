@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Список постов</title>
+	<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.min.js"></script>
+	<style>
+		.app {
+			font-family: Arial, sans-serif;
+			text-align: center;
+			margin-top: 20px;
+		}
+
+		.post {
+			background-color: #fff;
+			padding: 20px;
+			margin-bottom: 15px;
+			border-radius: 8px;
+			box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+		}
+
+		.post-actions button {
+			background-color: #333;
+			color: white;
+			border: none;
+			padding: 10px 20px;
+			margin: 5px;
+			font-size: 16px;
+			cursor: pointer;
+			border-radius: 4px;
+			transition: background-color 0.3s ease;
+		}
+
+		.post-actions button:hover {
+			background-color: #555;
+		}
+
+		.post-actions button:active {
+			background-color: #444;
+		}
+
+		h1 {
+			font-size: 24px;
+			margin-bottom: 20px;
+		}
+
+		h3 {
+			font-size: 18px;
+			color: #333;
+		}
+
+		p {
+			color: #666;
+		}
+	</style>
+</head>
+
+<body>
+
+	<div id="app">
+		<div class="app">
+			<h1>Список постов</h1>
+			<div v-for="(post, index) in posts" :key="index" class="post">
+				<h3>{{ post.title }}</h3>
+				<p>{{ post.content }}</p>
+
+				<div class="post-actions">
+					<button @click="likePost(index)">Лайк ({{ post.likes }})</button>
+					<button @click="dislikePost(index)">
+						Дизлайк ({{ post.dislikes }})
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		new Vue({
+			el: '#app',
+			data() {
+				return {
+					posts: [
+						{
+							title: 'Первый пост',
+							content: 'Это первый пост на сайте.',
+							likes: 0,
+							dislikes: 0,
+						},
+						{
+							title: 'Второй пост',
+							content: 'Это второй пост на сайте.',
+							likes: 0,
+							dislikes: 0,
+						},
+						{
+							title: 'Третий пост',
+							content: 'Это третий пост на сайте.',
+							likes: 0,
+							dislikes: 0,
+						},
+					],
+				}
+			},
+			methods: {
+				likePost(index) {
+					this.posts[index].likes++
+				},
+				dislikePost(index) {
+					this.posts[index].dislikes++
+				},
+			},
+		});
+	</script>
+
+</body>
+
+</html>

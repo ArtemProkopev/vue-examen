@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Динамическое изменение размеров квадрата</title>
+	<script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>
+	<style>
+		.app {
+			font-family: Arial, sans-serif;
+			text-align: center;
+			padding: 20px;
+			background-color: #f7f7f7;
+		}
+
+		h1 {
+			font-size: 24px;
+			color: #333;
+			margin-bottom: 20px;
+		}
+
+		.controls {
+			margin-bottom: 30px;
+		}
+
+		.control {
+			margin: 15px 0;
+			font-size: 16px;
+		}
+
+		label {
+			font-size: 14px;
+			margin-right: 10px;
+			color: #555;
+		}
+
+		input[type='range'] {
+			width: 250px;
+			background-color: #ddd;
+			border-radius: 5px;
+			appearance: none;
+			height: 8px;
+			margin-bottom: 10px;
+		}
+
+		input[type='range']::-webkit-slider-thumb {
+			appearance: none;
+			width: 20px;
+			height: 20px;
+			border-radius: 50%;
+			background-color: #333;
+			cursor: pointer;
+		}
+
+		input[type='range']:focus {
+			outline: none;
+		}
+
+		.square {
+			margin-top: 20px;
+			background-color: #333;
+			display: inline-block;
+			border-radius: 8px;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="app">
+		<h1>Динамическое изменение размеров квадрата</h1>
+
+		<div class="controls">
+			<div class="control">
+				<label for="width">Ширина:</label>
+				<input type="range" id="width" v-model="width" :min="50" :max="500" />
+				<span>{{ width }}px</span>
+			</div>
+
+			<div class="control">
+				<label for="height">Высота:</label>
+				<input type="range" id="height" v-model="height" :min="50" :max="500" />
+				<span>{{ height }}px</span>
+			</div>
+		</div>
+
+		<div class="square" :style="{ width: width + 'px', height: height + 'px' }"></div>
+	</div>
+
+	<script>
+		const app = Vue.createApp({
+			data() {
+				return {
+					width: 100,
+					height: 100,
+				}
+			},
+		})
+
+		app.mount('#app');
+	</script>
+</body>
+
+</html>

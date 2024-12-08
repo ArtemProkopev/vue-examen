@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Список статей</title>
+	<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+	<style>
+		.article {
+			margin-bottom: 10px;
+		}
+
+		h3 {
+			margin: 5px 0;
+			font-size: 1.2rem;
+		}
+
+		button {
+			padding: 5px 10px;
+			background-color: #333;
+			/* Темный фон */
+			color: white;
+			border: none;
+			cursor: pointer;
+			font-size: 0.9rem;
+			border-radius: 4px;
+			margin-top: 10px;
+		}
+
+		button:hover {
+			background-color: #555;
+			/* Более светлый оттенок при наведении */
+		}
+
+		.pagination {
+			margin-top: 20px;
+		}
+
+		.pagination button {
+			padding: 5px 10px;
+			background-color: #ddd;
+			border: none;
+			cursor: pointer;
+			margin-right: 5px;
+			font-size: 0.9rem;
+		}
+
+		.pagination button.active {
+			background-color: #333;
+			color: white;
+		}
+
+		.pagination button:hover {
+			background-color: #555;
+		}
+	</style>
+</head>
+
+<body>
+
+	<div id="app">
+		<div>
+			<h2>Список статей</h2>
+			<div v-for="article in paginatedArticles" :key="article.id" class="article">
+				<h3>{{ article.title }}</h3>
+				<p>
+					{{
+					article.showFullDescription || article.description.length <= 100 ? article.description :
+						article.description.slice(0, 100) + '...' }} </p>
+						<button @click="toggleDescription(article)">
+							{{ article.showFullDescription ? 'Скрыть' : 'Показать' }}
+						</button>
+			</div>
+
+			<!-- Пагинация -->
+			<div class="pagination">
+				<button v-for="page in totalPages" :key="page" @click="changePage(page)"
+					:class="{ active: page === currentPage }">
+					{{ page }}
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		new Vue({
+			el: '#app',
+			data() {
+				return {
+					currentPage: 1,
+					itemsPerPage: 3,
+					articles: [
+						{
+							title: 'Статья 1',
+							description:
+								'Это длинное описание статьи 1. Это описание, которое превышает 100 символов, и будет скрыто по умолчанию. Показать его можно будет с помощью кнопки.',
+						},
+						{
+							title: 'Статья 2',
+							description: 'Это короткое описание статьи 2.',
+						},
+						{
+							title: 'Статья 3',
+							description:
+								'Описание статьи 3 также длинное. Оно будет скрыто за кнопкой, пока пользователь не нажмет на кнопку "Показать".',
+						},
+						{
+							title: 'Статья 4',
+							description: 'Короткое описание статьи 4.',
+						},
+						{
+							title: 'Статья 5',
+							description:
+								'Описание статьи 5 достаточно длинное, чтобы быть скрытым и показать только часть текста.',
+						},
+						{
+							title: 'Статья 6',
+							description:
+								'Описание статьи 6 не слишком длинное, но будет скрыто по умолчанию, так как она превышает 100 символов.',
+						},
+					],
+					paginatedArticles: [],
+				}
+			},
+			computed: {
+				totalPages() {
+					return Math.ceil(this.articles.length / this.itemsPerPage)
+				},
+			},
+			methods: {
+				toggleDescription(article) {
+					article.showFullDescription = !article.showFullDescription
+				},
+				changePage(page) {
+					this.currentPage = page
+					this.paginate()
+				},
+				paginate() {
+					const start = (this.currentPage - 1) * this.itemsPerPage
+					const end = start + this.itemsPerPage
+					this.paginatedArticles = this.articles.slice(start, end).map(article => ({
+						...article,
+						showFullDescription: false,
+					}))
+				},
+			},
+			watch: {
+				articles: 'paginate',
+				currentPage: 'paginate',
+			},
+			mounted() {
+				this.paginate()
+			},
+		});
+	</script>
+
+</body>
+
+</html>

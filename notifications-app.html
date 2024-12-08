@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Уведомления</title>
+	<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.min.js"></script>
+	<style>
+		/* Стили для уведомлений */
+		.notification {
+			background-color: #f8d7da;
+			color: #721c24;
+			border: 1px solid #f5c6cb;
+			padding: 10px;
+			margin: 10px 0;
+			border-radius: 5px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+		.notification-content p {
+			margin: 0;
+		}
+
+		button {
+			background-color: transparent;
+			border: none;
+			color: #721c24;
+			font-size: 16px;
+			cursor: pointer;
+		}
+
+		button:hover {
+			text-decoration: underline;
+		}
+
+		/* Стили для основной страницы */
+		#app {
+			font-family: Arial, sans-serif;
+			text-align: center;
+			padding: 20px;
+		}
+
+		button {
+			margin-top: 20px;
+			padding: 10px;
+			font-size: 16px;
+			cursor: pointer;
+		}
+
+		button:hover {
+			background-color: #ddd;
+		}
+	</style>
+</head>
+
+<body>
+
+	<div id="app">
+		<h1>Уведомления</h1>
+		<div v-for="(notification, index) in notifications" :key="index">
+			<div class="notification" v-if="notification.visible">
+				<div class="notification-content">
+					<p>{{ notification.message }}</p>
+					<button @click="closeNotification(index)">Закрыть</button>
+				</div>
+			</div>
+		</div>
+		<button @click="addNotification">Добавить уведомление</button>
+	</div>
+
+	<script>
+		new Vue({
+			el: '#app',
+			data() {
+				return {
+					notifications: [
+						{ message: 'Это уведомление 1', visible: true },
+						{ message: 'Это уведомление 2', visible: true },
+						{ message: 'Это уведомление 3', visible: true },
+					],
+				}
+			},
+			methods: {
+				addNotification() {
+					this.notifications.push({ message: 'Новое уведомление', visible: true })
+				},
+				closeNotification(index) {
+					this.notifications[index].visible = false
+				},
+			},
+		});
+	</script>
+
+</body>
+
+</html>

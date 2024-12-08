@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Фильтрация списка пользователей</title>
+	<script src="https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.js"></script>
+	<style>
+		#app {
+			font-family: Arial, sans-serif;
+			margin: 20px;
+		}
+
+		.filters input {
+			margin-right: 10px;
+			padding: 5px;
+		}
+
+		ul {
+			list-style: none;
+			padding: 0;
+		}
+
+		li {
+			padding: 10px;
+			border: 1px solid #ddd;
+			margin-bottom: 10px;
+		}
+
+		h1 {
+			margin-bottom: 20px;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="app">
+		<h1>Фильтрация списка пользователей</h1>
+		<div class="filters">
+			<input v-model="filters.name" placeholder="Поиск по имени" />
+			<input v-model="filters.age" type="number" placeholder="Поиск по возрасту" />
+			<input v-model="filters.city" placeholder="Поиск по городу" />
+			<input v-model="filters.role" placeholder="Поиск по роли" />
+		</div>
+		<div>
+			<h2>Список пользователей</h2>
+			<ul>
+				<li v-for="(user, index) in filteredUsers" :key="index">
+					<strong>{{ user.name }}</strong> - {{ user.age }} лет, {{ user.city }},
+					Роль: {{ user.role }}
+				</li>
+			</ul>
+		</div>
+	</div>
+
+	<script>
+		const app = Vue.createApp({
+			data() {
+				return {
+					filters: {
+						name: '',
+						age: '',
+						city: '',
+						role: '',
+					},
+					users: [
+						{ name: 'Иван Иванов', age: 28, city: 'Москва', role: 'Администратор' },
+						{ name: 'Анна Петрова', age: 34, city: 'Санкт-Петербург', role: 'Менеджер' },
+						{ name: 'Мария Сидорова', age: 22, city: 'Новосибирск', role: 'Разработчик' },
+						{ name: 'Петр Смирнов', age: 40, city: 'Екатеринбург', role: 'Дизайнер' },
+						{ name: 'Елена Кузнецова', age: 25, city: 'Москва', role: 'Аналитик' },
+					],
+				}
+			},
+			computed: {
+				filteredUsers() {
+					return this.users.filter(user => {
+						return (
+							(!this.filters.name ||
+								user.name.toLowerCase().includes(this.filters.name.toLowerCase())) &&
+							(!this.filters.age || user.age == this.filters.age) &&
+							(!this.filters.city ||
+								user.city.toLowerCase().includes(this.filters.city.toLowerCase())) &&
+							(!this.filters.role ||
+								user.role.toLowerCase().includes(this.filters.role.toLowerCase()))
+						)
+					})
+				},
+			},
+		})
+
+		app.mount('#app');
+	</script>
+</body>
+
+</html>
